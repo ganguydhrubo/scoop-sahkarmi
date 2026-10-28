@@ -1,0 +1,21 @@
+# Checks for new Sahkarmi releases and commits manifest updates.
+# Uses the SCOOP_EXCAVATOR_TOKEN secret when present, otherwise the built-in token.
+name: Excavator
+on:
+  schedule:
+    - cron: '20 */4 * * *' # every 4 hours
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  excavate:
+    name: Excavate
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Excavate
+        uses: ScoopInstaller/GithubActions@v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.SCOOP_EXCAVATOR_TOKEN || github.token }}
+          SKIP_UPDATED: 1
